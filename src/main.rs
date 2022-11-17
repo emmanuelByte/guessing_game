@@ -6,16 +6,22 @@ use std::cmp::Ordering;
 use std::io;
 fn main() {
     println!("Guess the number!");
+    let mut trials = 0;
     // generate a random number between 1 and 100
     let secret_number = rand::thread_rng().gen_range(1..=100);
     loop {
-        println!("Please input your guess.");
+        if trials >= 5 {
+            println!("You have exceeded the number of trials");
+            break;
+        }
+        println!("Please input your guess. {} trials left", 5 - trials);
         // create a mutable variable to store the user input
         let mut guess = String::new();
         // read the user input and store it in the guess variable
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
+        match io::stdin().read_line(&mut guess) {
+            Ok(_) => {}
+            Err(error) => println!("Error: {}", error),
+        }
         // convert the user input to a number
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
@@ -30,5 +36,6 @@ fn main() {
                 break;
             }
         }
+        trials += 1;
     }
 }
